@@ -1,0 +1,59 @@
+import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class KeyPressIncrement {
+    public static void main(String[] args) {
+        AtomicInteger counter = new AtomicInteger(0);  
+        int r = 1;
+        int c = 50;
+        int c1 = 100;
+        boolean t = true;
+        boolean one = false;
+        int t1 = 1;
+        
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable repeatedTask = () -> {
+            counter.addAndGet(t1);  
+        };
+        
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Press 'i' and Enter to increment the counter. Press 'q' and Enter to quit.");
+
+        while (t) {  
+            System.out.print("Current counter: " + counter.get() + " > ");
+            String input = scanner.nextLine();
+           
+            if (input.equalsIgnoreCase("i")) {
+                counter.addAndGet(r); 
+                System.out.println("Counter incremented!");
+            } else if (input.equalsIgnoreCase("q")) {
+                System.out.println("Exiting program.");
+                t = false;
+                scheduler.shutdown();
+            } else {
+                System.out.println("Invalid input. Please press 'i' or 'q'.");
+            }
+            
+            if(input.equalsIgnoreCase("a") && counter.get() >= c) {
+                one = true;
+                counter.addAndGet(-c1);  
+                c1 = (int)(c1 * 1.15);
+                
+                if (one) {  
+                    scheduler.scheduleAtFixedRate(repeatedTask, 1, 1, TimeUnit.SECONDS);
+                }
+            }
+            
+            if(input.equalsIgnoreCase("u") && counter.get() >= c) {
+                counter.addAndGet(-c);  
+                c = (int)(c * 1.15);
+                r = r + 1;
+            }
+        }
+        scanner.close();
+    }
+}
