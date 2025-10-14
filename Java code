@@ -21,7 +21,7 @@ public class KeyPressIncrement {
         
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Press 'i' and Enter to increment the counter. Press 'q' and Enter to quit.");
+        System.out.println("Press 'i' and Enter to increment the counter. Press 'q' and Enter to quit. Press a and enter to automatically increment (100 increments of base cost). press u and enter to increment an additional time every time you increment (50 increment base cost).");
 
         while (t) {  
             System.out.print("Current counter: " + counter.get() + " > ");
@@ -30,19 +30,27 @@ public class KeyPressIncrement {
             if (input.equalsIgnoreCase("i")) {
                 counter.addAndGet(r); 
                 System.out.println("Counter incremented!");
-            } else if (input.equalsIgnoreCase("q")) {
+            } 
+            
+         else   if (input.equalsIgnoreCase("a")) 
+                System.out.println("Counter will now be incremented automatically an additional increment per second!");
+       else if (input.equalsIgnoreCase("u")) 
+                System.out.println("Counter will now be incremented an additional time every time you increment it!");
+            
+            
+            else if (input.equalsIgnoreCase("q")) {
                 System.out.println("Exiting program.");
                 t = false;
                 scheduler.shutdown();
             } else {
-                System.out.println("Invalid input. Please press 'i' or 'q'.");
+                System.out.println("Invalid input. Please press 'i', 'a', 'u', or 'q'.");
             }
             
             if(input.equalsIgnoreCase("a") && counter.get() >= c) {
                 one = true;
                 counter.addAndGet(-c1);  
                 c1 = (int)(c1 * 1.15);
-                
+                  System.out.println("auto inccrementeer purchased successfully" + counter + "is the current increment amount");
                 if (one) {  
                     scheduler.scheduleAtFixedRate(repeatedTask, 1, 1, TimeUnit.SECONDS);
                 }
@@ -52,6 +60,8 @@ public class KeyPressIncrement {
                 counter.addAndGet(-c);  
                 c = (int)(c * 1.15);
                 r = r + 1;
+                System.out.println("Your increments per i entering has gone up by one! You now have " + counter + " increments!");
+                
             }
         }
         scanner.close();
