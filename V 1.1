@@ -1,0 +1,73 @@
+import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import  java.util.logging
+public class KeyPressIncrement {
+    public static void main(String[] args) {
+        AtomicInteger counter = new AtomicInteger(0); //atomic int for lambda statement 
+        int r = 1; //base rate
+        int c = 50; //rate increase cost
+        int c1 = 100; // auto-incrementer cost
+        boolean t = true; //while loop to keep it running
+        boolean one = false; //lambda setup boolean value 
+        int t1 = 1; // auto rate
+        
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable repeatedTask = () -> {
+            counter.addAndGet(t1);  //lambdaa expression
+        };
+        
+        Scanner scanner = new Scanner(System.in); //scanner
+
+        System.out.println("Press 'i' and Enter to increment the counter. Press 'q' and Enter to quit. Press a and enter to automatically increment (100 increments of base cost). press u and enter to increment an additional time every time you increment (50 increment base cost)."); //prompt
+
+        while (t) {  //while loop to keep it running
+            System.out.print("Current counter: " + counter.get() + " > "); // current value
+            String input = scanner.nextLine(); // input 
+           
+            if (input.equalsIgnoreCase("i")) { //to manually increment
+                counter.addAndGet(r);  //adds r to atomic int counter to actually worko
+                System.out.println("Counter incremented!"); // to tell you it worked
+            } 
+            
+         else   if (input.equalsIgnoreCase("a")){//a for auto
+                    if(counter.get() >= c1)
+                System.out.println("Counter will now be incremented automatically an additional increment per second!");
+                else  System.out.println("Too poor for this");}
+       else if (input.equalsIgnoreCase("u")){ //u for upgrade
+                if(counter.get() >= c){ //forces the proper output as per counter value
+                System.out.println("Counter will now be incremented an additional time every time you increment it!");}
+            else
+            System.out.println("insufficient value");}
+            
+            else if (input.equalsIgnoreCase("q")) { //so you can end it without the terminate button
+                System.out.println("Exiting program.");
+                t = false; //makes the while loop that sustains this stop
+                scheduler.shutdown(); //shutss down the repeating increment
+            } else {
+                System.out.println("Invalid input. Please press 'i', 'a', 'u', or 'q'."); //in case of trash input
+            }
+            
+            if(input.equalsIgnoreCase("a") && counter.get() >= c1) { //code for auto incrementation
+                one = true;
+                counter.addAndGet(-c1);  
+                c1 = (int)(c1 * 1.15);
+                  System.out.println("auto inccrementer purchased successfully," + counter + " is the current increment amount");
+                if (one) {  
+                    scheduler.scheduleAtFixedRate(repeatedTask, 1, 1, TimeUnit.SECONDS);
+                }
+            }
+            
+            if(input.equalsIgnoreCase("u") && counter.get() >= c) { //code for increasing incrementation per incrementation
+                counter.addAndGet(-c);  
+                c = (int)(c * 1.15);
+                r = r + 1;
+                System.out.println("Your increments per i entering has gone up by one! You now have " + counter + " increments!");
+                
+            }
+        }
+        scanner.close();
+    }
+}
